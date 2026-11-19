@@ -1,0 +1,46 @@
+{
+  "projects": [
+    {
+      "name": "Website Redesign",
+      "owner": "Priya Patel",
+      "status": "On track",
+      "recentActivity": "Homepage mockups approved; build starts Monday.",
+      "priority": "High"
+    },
+    {
+      "name": "Mobile App Launch",
+      "owner": "Marcus Lee",
+      "status": "At risk",
+      "recentActivity": "App store review is delayed by two days.",
+      "priority": "High"
+    },
+    {
+      "name": "Payment Gateway Migration",
+      "owner": "Sofia Alvarez",
+      "status": "Blocked",
+      "recentActivity": "Waiting on credentials from the payment provider.",
+      "priority": "Medium"
+    },
+    {
+      "name": "Q3 Customer Survey",
+      "owner": "Daniel Okafor",
+      "status": "Done",
+      "recentActivity": "Results published and shared with leadership.",
+      "priority": "Low"
+    },
+    {
+      "name": "Internal Documentation Refresh",
+      "owner": "Aisha Rahman",
+      "status": "On track",
+      "recentActivity": "Onboarding guide drafted; review requested from the support team.",
+      "priority": "Low"
+    },
+    {
+      "name": "Cross-Regional Data Platform Consolidation and Compliance Readiness Programme for International Operations",
+      "owner": "Jonathan Featherstonehaugh-Wellesley",
+      "status": "At risk",
+      "recentActivity": "Security review uncovered several data residency gaps across three regions, so the team is re-planning the migration waves, updating the vendor agreements, and scheduling a follow-up with legal before the next steering committee meeting.",
+      "priority": "Medium"
+    }
+  ]
+}

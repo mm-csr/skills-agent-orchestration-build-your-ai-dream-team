@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="dashboard">
+    <header class="dashboard-header">
+      <h1>Project Pulse</h1>
+      <p>A quick view of status, priority and recent activity across projects.</p>
+    </header>
+    <p class="dashboard-message" role="status" id="dashboard-message">Loading projects…</p>
+    <section class="project-grid" id="project-grid" aria-label="Projects"></section>
+  </main>
+
+  <script>
+    (function () {
+      var DATA_URL = "project-data.json";
+      var messageEl = document.getElementById("dashboard-message");
+      var gridEl = document.getElementById("project-grid");
+
+      function showMessage(text) {
+        messageEl.textContent = text;
+        messageEl.hidden = false;
+      }
+
+      function hideMessage() {
+        messageEl.textContent = "";
+        messageEl.hidden = true;
+      }
+
+      function slugify(value) {
+        return value.toLowerCase().trim().replace(/\s+/g, "-");
+      }
+
+      function textOrDefault(value, fallback) {
+        if (typeof value === "string" && value.trim() !== "") {
+          return value.trim();
+        }
+        return fallback;
+      }
+
+      function createElement(tag, className, text) {
+        var el = document.createElement(tag);
+        if (className) {
+          el.className = className;
+        }
+        if (text !== undefined) {
+          el.textContent = text;
+        }
+        return el;
+      }
+
+      function createCard(project) {
+        var item = (project && typeof project === "object") ? project : {};
+        var known = {
+          status: ["on-track", "at-risk", "blocked", "done"],
+          priority: ["high", "medium", "low"]
+        };
+
+        var status = textOrDefault(item.status, "Unknown status");
+        var statusSlug = slugify(status);
+        if (known.status.indexOf(statusSlug) === -1) {
+          statusSlug = "unknown";
+        }
+
+        var priority = textOrDefault(item.priority, "Unknown priority");
+        var prioritySlug = slugify(priority);
+        if (known.priority.indexOf(prioritySlug) === -1) {
+          prioritySlug = "unknown";
+        }
+
+        var card = createElement("article", "project-card");
+        card.appendChild(createElement("h2", "project-name", textOrDefault(item.name, "Untitled project")));
+        card.appendChild(createElement("p", "project-owner", "Owner: " + textOrDefault(item.owner, "Unknown owner")));
+        card.appendChild(createElement("span", "status-badge status-" + statusSlug, status));
+        card.appendChild(createElement("p", "project-activity", textOrDefault(item.recentActivity, "No recent activity")));
+        card.appendChild(createElement("span", "priority priority-" + prioritySlug, "Priority: " + priority));
+        return card;
+      }
+
+      function render(projects) {
+        gridEl.textContent = "";
+        if (projects.length === 0) {
+          showMessage("No projects yet.");
+          return;
+        }
+        projects.forEach(function (project) {
+          gridEl.appendChild(createCard(project));
+        });
+        hideMessage();
+      }
+
+      if (window.location.protocol === "file:") {
+        showMessage("This page can't load project-data.json when opened as a file. Start the \"Run Project Pulse Dashboard\" launch configuration, or run `python3 -m http.server` in the app folder.");
+        return;
+      }
+
+      fetch(DATA_URL)
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Could not load project-data.json (HTTP " + response.status + ").");
+          }
+          return response.json();
+        })
+        .then(function (data) {
+          if (!data || !Array.isArray(data.projects)) {
+            throw new Error("project-data.json must contain a \"projects\" array.");
+          }
+          render(data.projects);
+        })
+        .catch(function (error) {
+          console.error("Project Pulse failed to load data:", error);
+          showMessage(error && error.message
+            ? "Sorry, projects could not be shown. " + error.message
+            : "Sorry, projects could not be shown.");
+        });
+    })();
+  </script>
+</body>
+</html>

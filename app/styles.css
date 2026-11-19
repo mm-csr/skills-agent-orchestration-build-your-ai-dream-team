@@ -1,0 +1,273 @@
+/* Project Pulse dashboard styles */
+
+:root {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --text-muted: #475569;
+  --border: #e2e8f0;
+  --brand: #1e3a8a;
+  --brand-2: #4338ca;
+  --focus: #1d4ed8;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --radius-sm: 0.5rem;
+  --radius: 1rem;
+  --radius-pill: 999px;
+
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 2px 4px rgba(15, 23, 42, 0.08), 0 12px 24px rgba(15, 23, 42, 0.14);
+
+  /* Status colors (text on background all >= 7:1) */
+  --on-track-bg: #dcfce7;
+  --on-track-fg: #14532d;
+  --on-track-accent: #16a34a;
+  --at-risk-bg: #fef3c7;
+  --at-risk-fg: #78350f;
+  --at-risk-accent: #d97706;
+  --blocked-bg: #fee2e2;
+  --blocked-fg: #7f1d1d;
+  --blocked-accent: #dc2626;
+  --done-bg: #e0e7ff;
+  --done-fg: #312e81;
+  --done-accent: #4f46e5;
+  --unknown-bg: #e5e7eb;
+  --unknown-fg: #1f2937;
+  --unknown-accent: #6b7280;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+.dashboard {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+}
+
+/* Header */
+.dashboard-header {
+  margin-bottom: var(--space-5);
+  padding: var(--space-5);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.dashboard-header h1 {
+  margin: 0 0 var(--space-1);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-header p {
+  margin: 0;
+  font-size: 1.0625rem;
+  color: #e0e7ff;
+  max-width: 60ch;
+}
+
+/* Grid */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+/* Card */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 5px solid var(--unknown-accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Accent stripe follows status where the browser supports :has() */
+.project-card:has(.status-on-track) { border-top-color: var(--on-track-accent); }
+.project-card:has(.status-at-risk) { border-top-color: var(--at-risk-accent); }
+.project-card:has(.status-blocked) { border-top-color: var(--blocked-accent); }
+.project-card:has(.status-done) { border-top-color: var(--done-accent); }
+
+.project-name {
+  margin: 0;
+  font-size: 1.1875rem;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.project-owner {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+.project-activity {
+  margin: 0;
+  flex: 1 1 auto;
+  color: var(--text);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+/* Badges and priority share one row if the markup places them together */
+.status-badge,
+.priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+}
+
+.status-badge {
+  border: 1px solid currentColor;
+}
+
+/* Non-color cue: a shape glyph precedes each status label */
+.status-badge::before {
+  content: "";
+  flex: none;
+  width: 0.55em;
+  height: 0.55em;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.status-on-track { background: var(--on-track-bg); color: var(--on-track-fg); }
+.status-at-risk { background: var(--at-risk-bg); color: var(--at-risk-fg); }
+.status-at-risk::before { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.status-blocked { background: var(--blocked-bg); color: var(--blocked-fg); }
+.status-blocked::before { border-radius: 0; }
+.status-done { background: var(--done-bg); color: var(--done-fg); }
+.status-done::before { border-radius: 0; clip-path: polygon(0 55%, 20% 35%, 40% 60%, 85% 5%, 100% 25%, 40% 100%); }
+.status-unknown { background: var(--unknown-bg); color: var(--unknown-fg); }
+
+/* Priority: High is filled and loud, Medium outlined, Low quiet */
+.priority {
+  border: 2px solid transparent;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+
+.priority-high { background: #7f1d1d; border-color: #7f1d1d; color: #ffffff; }
+.priority-medium { background: #ffffff; border-color: #b45309; color: #78350f; }
+.priority-low { background: #f8fafc; border-color: #cbd5e1; color: #334155; font-weight: 600; }
+
+/* Messages: loading, empty, error */
+.dashboard-message {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--brand-2);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.dashboard-message:empty,
+.dashboard-message[hidden] {
+  display: none;
+}
+
+.dashboard-message.error,
+.dashboard-message[data-state="error"] {
+  background: #fef2f2;
+  border-left-color: var(--blocked-accent);
+  color: var(--blocked-fg);
+}
+
+/* Focus */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible,
+.project-card:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.project-card:focus-within:has(:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Small screens: single column, tighter spacing */
+@media (max-width: 600px) {
+  .dashboard {
+    padding: var(--space-4) var(--space-3) var(--space-5);
+  }
+
+  .dashboard-header,
+  .project-card {
+    padding: var(--space-4);
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .project-card:hover,
+  .project-card:focus-within {
+    transform: none;
+  }
+}
